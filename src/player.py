@@ -15,6 +15,7 @@ class Player(sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.keyMap = {}
         self.current_frame = -1
+        self.jump_velocity = 0
         self.state = "idle"
         self.setPlayer(device)
         self.restart()
@@ -43,25 +44,30 @@ class Player(sprite.Sprite):
 
     def load_sprites(self):
         ficha = {
+            "normal" : load_image("assets/images/sprites/player.png"),
         }
         return ficha
+        
 
-    def actionKeyboard(self, keys, time):
+
+    def action_keyboard(self, keys):
         if keys[K_a] or keys[K_LEFT]:
-            self.move("left", time)
             if self.state != "left":
                 self.current_frame = 0
                 self.state = "left"
         elif keys[K_d] or keys[K_RIGHT]:
-            self.move("right", time)
             if self.state != "right":
                 self.current_frame = FRAME_PER_SPRITE
                 self.state = "right"
         else:
             self.state = "idle"
+        #if keys[k_UP] and self.jump_velocity != 0:
+        #    self.jump_velocity = JUMP_INIT_VELOCITY
+            
 
 
     def getFrame(self):
+        return self.sprites["normal"]
         if self.current_frame == -1:
             return self.sprites["normal"]
         if self.state == "idle":
@@ -77,10 +83,29 @@ class Player(sprite.Sprite):
 
 # Actions
     def move(self, direction, time):
-        pass
+        speed = PLAYER_SPEED
+        if direction == "left":
+            self.x -= time * speed
+            if self.x <= LEFT_LIMIT:
+                self.x = LEFT_LIMIT
+        if direction == "right":
+            self.x += time * speed
+            if self.x >= RIGHT_LIMIT:
+                self.x = RIGHT_LIMIT
 
     def update(self):
         self.image = self.getFrame()
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
+
+    def get_displacement(self, time):
+        x = 0
+        y = 0
+        if self.state == "left":
+            x += time * HORIZONTAL_VELOCITY
+        if self.state == "right":
+            x -= time * HORIZONTAL_VELOCITY
+        return (x, y)
+
+
 

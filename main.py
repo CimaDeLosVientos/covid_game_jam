@@ -1,7 +1,7 @@
 import pygame, os, random, time as tim
 from pygame.locals import *
 from src.helpers import *
-from src.platforms import *
+from src.platform import *
 from src.player import Player
 from src.parameters import *
 from src.game_scene import *
@@ -19,8 +19,8 @@ class Director:
 
     def __init__(self, scenes, data):
         # Display
-        #self.screen = pygame.display.set_mode([WIDTH, HEIGHT])
-        self.screen = pygame.display.set_mode([WIDTH, HEIGHT], flags = pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode([WIDTH, HEIGHT])
+        #self.screen = pygame.display.set_mode([WIDTH, HEIGHT], flags = pygame.FULLSCREEN)
 
 
         # Screen name
