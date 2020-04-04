@@ -1,4 +1,4 @@
-from pygame import sprite, transform
+from pygame import sprite, transform, Rect
 from pygame.locals import *
 from .helpers import *
 from .parameters import *
@@ -9,25 +9,61 @@ class Player(sprite.Sprite):
         self.device = device
         self.sprites = self.load_sprites()
         self.image = self.sprites["normal"]
-        self.x = self.x_initial = pos_x         #X inicial
+        self.x = pos_x         #X inicial
         self.y = pos_y         #Y inicial   
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
         self.keyMap = {}
         self.current_frame = -1
+
         self.jump_time = 0
         self.on_air = False
         self.state = "idle"
+
+        self.collision_rect_left = Rect((self.rect.left,
+                                        self.rect.top,
+                                        MARGIN_COLLISION_RECT,
+                                        self.rect.height - MARGIN_COLLISION_RECT))
+        self.collision_rect_right = Rect((self.rect.right - MARGIN_COLLISION_RECT,
+                                        self.rect.top,
+                                        MARGIN_COLLISION_RECT,
+                                        self.rect.height - MARGIN_COLLISION_RECT))
+        self.collision_rect_down = Rect((self.rect.left + MARGIN_COLLISION_RECT,
+                                        self.rect.bottom - MARGIN_COLLISION_RECT,
+                                        self.rect.width - MARGIN_COLLISION_RECT,
+                                        MARGIN_COLLISION_RECT))
+
         self.setPlayer(device)
         self.restart()
 
     def restart(self):
-        #Reiniciar atributos del personaje
         self.state = "idle"
-        self.x = self.x_initial
         self.image = self.sprites["normal"]
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
+
+
+    def on_floor(self, platforms):
+        for platform in platforms:
+            if self.collision_rect_down.colliderect(platform.rect):
+                self.on_air = False
+                self.jump_time = 0  
+                return True
+        self.on_air = True
+
+
+    def in_touch_on_right(self, platforms):
+        for platform in platforms:
+            if self.collision_rect_right.colliderect(platform.rect):
+                return True
+        return False
+
+
+    def in_touch_on_left(self, platforms):
+        for platform in platforms:
+            if self.collision_rect_left.colliderect(platform.rect):
+                return True
+        return False
 
 
     def setPlayer(self, device):
@@ -83,25 +119,27 @@ class Player(sprite.Sprite):
         else:
             return self.sprites["right"]
 
-    def update(self):
+    def update(self, platforms):
+        self.on_floor(platforms)
         self.image = self.getFrame()
-        self.rect = self.image.get_rect()
-        self.rect.center = (self.x, self.y)
+        #self.rect = self.image.get_rect()
+        #self.rect.center = (self.x, self.y)
 
-    def get_displacement(self, time):
+    def get_displacement(self, time, platforms):
         # e = 1/2 * a * t² + Vo * t + Eo
         x = 0
         y = 0
-        if self.state == "left":
+        if self.state == "left" and not self.in_touch_on_left(platforms):
             x += time * HORIZONTAL_VELOCITY
-        if self.state == "right":
+        if self.state == "right"  and not self.in_touch_on_right(platforms):
             x -= time * HORIZONTAL_VELOCITY
         if self.jump_time > 0:
-            y -= JUMP_POWER
+            y += JUMP_POWER
             self.jump_time -= 1
         else:
             if self.on_air:
-                y += JUMP_POWER
+                y -= JUMP_POWER
+                self.jump_time -= 1
 
         #if self.jump_time <= 0:
         #    self.state = "idle"

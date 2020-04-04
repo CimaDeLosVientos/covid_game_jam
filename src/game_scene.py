@@ -11,13 +11,27 @@ class GameScene():
 
         # Platforms
         self.platforms = pygame.sprite.Group()
-        self.platforms.add(Platform((200, 500), "platform_1"))
-        self.platforms.add(Platform((400, 500), "platform_2"))
-        self.platforms.add(Platform((600, 500), "platform_3"))
+        
+
+        pl = []
+        pl.append(Platform((200, 500), "platform_1"))
+        pl.append(Platform((pl[-1].x + 500, pl[-1].y + 0), "platform_2"))
+        pl.append(Platform((pl[-1].x + 200, pl[-1].y + 0), "platform_3"))
+        self.platforms.add(pl)
+
+
+
+
+        #self.platforms.add(Platform((200, 500), "platform_1"))
+        #self.platforms.add(Platform((700, 500), "platform_2"))
+        #self.platforms.add(Platform((900, 500), "platform_3"))
+
+        self.origen_point_x = 250
+        self.origen_point_y = 400
+        self.die = False
 
         # Player
         self.player = Player("keyboard", int(WIDTH / 2), int(HEIGHT / 2))
-
 
     def load(self, data):
         pass
@@ -32,7 +46,12 @@ class GameScene():
 
 
     def on_update(self, time):
-        self.platforms.update(time, self.player)
+        displacement = self.player.get_displacement(time, self.platforms)
+        self.player.update(self.platforms)
+        self.platforms.update(displacement, self.player)
+        if self.player.jump_time < FALL_TIME_OVER and self.platforms.sprites()[0].y < self.origen_point_y:
+            for platform in self.platforms:
+                platform.restart()
 
 
     def on_draw(self, screen):
