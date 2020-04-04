@@ -15,7 +15,8 @@ class Player(sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.keyMap = {}
         self.current_frame = -1
-        self.jump_velocity = 0
+        self.jump_time = 0
+        self.on_air = False
         self.state = "idle"
         self.setPlayer(device)
         self.restart()
@@ -61,8 +62,9 @@ class Player(sprite.Sprite):
                 self.state = "right"
         else:
             self.state = "idle"
-        #if keys[k_UP] and self.jump_velocity != 0:
-        #    self.jump_velocity = JUMP_INIT_VELOCITY
+        if keys[K_UP] and not self.on_air:
+            self.jump_time = JUMP_DURATION
+            self.on_air = True
             
 
 
@@ -81,30 +83,35 @@ class Player(sprite.Sprite):
         else:
             return self.sprites["right"]
 
-# Actions
-    def move(self, direction, time):
-        speed = PLAYER_SPEED
-        if direction == "left":
-            self.x -= time * speed
-            if self.x <= LEFT_LIMIT:
-                self.x = LEFT_LIMIT
-        if direction == "right":
-            self.x += time * speed
-            if self.x >= RIGHT_LIMIT:
-                self.x = RIGHT_LIMIT
-
     def update(self):
         self.image = self.getFrame()
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
     def get_displacement(self, time):
+        # e = 1/2 * a * t² + Vo * t + Eo
         x = 0
         y = 0
         if self.state == "left":
             x += time * HORIZONTAL_VELOCITY
         if self.state == "right":
             x -= time * HORIZONTAL_VELOCITY
+        if self.jump_time > 0:
+            y -= JUMP_POWER
+            self.jump_time -= 1
+        else:
+            if self.on_air:
+                y += JUMP_POWER
+
+        #if self.jump_time <= 0:
+        #    self.state = "idle"
+
+
+        #if self.jump_velocity > 0:
+        #    y += (0.5 * GRAVITY * time * time) + self.jump_velocity * time
+        #    self.jump_velocity += GRAVITY * time
+        #else:
+        #    self.jump_velocity = 0
         return (x, y)
 
 
