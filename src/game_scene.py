@@ -14,9 +14,11 @@ class GameScene():
         
 
         pl = []
-        pl.append(Platform((200, 500), "platform_1"))
-        pl.append(Platform((pl[-1].x + 500, pl[-1].y + 0), "platform_2"))
-        pl.append(Platform((pl[-1].x + 200, pl[-1].y + 0), "platform_3"))
+        pl.append(Platform((500, 645), "mar"))
+        pl.append(Platform((pl[-1].x + 725, pl[-1].y - 25), "playa"))
+        #Escena 2 (Playa)
+        pl.append(Platform((pl[-1].x + 300, pl[-1].y - 125), "platform_2"))
+        pl.append(Platform((pl[-1].x + 187, pl[-1].y - 50), "platform_3"))
         self.platforms.add(pl)
 
 
@@ -31,7 +33,7 @@ class GameScene():
         self.die = False
 
         # Player
-        self.player = Player("keyboard", int(WIDTH / 2), int(HEIGHT / 2))
+        self.player = Player("keyboard", int(WIDTH / 2), 520)
 
     def load(self, data):
         pass
