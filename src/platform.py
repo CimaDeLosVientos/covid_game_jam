@@ -44,7 +44,7 @@ class FloatPlatformHorizontal(FloatPlatform):
 
     def move(self, displacement):
         super(FloatPlatformHorizontal, self).move(displacement)
-        self.x += FLOAT_STEP * self.orientation
+        self.x += 1 * self.orientation
         self.current += 1
         if self.current == self.distance:
             self.orientation *= -1
@@ -58,7 +58,7 @@ class FloatPlatformVertical(FloatPlatform):
 
     def move(self, displacement):
         super(FloatPlatformVertical, self).move(displacement)
-        self.y += FLOAT_STEP * self.orientation
+        self.y += 1 * self.orientation
         self.current += 1
         if self.current == self.distance:
             self.orientation *= -1
