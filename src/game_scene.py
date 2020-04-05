@@ -124,7 +124,7 @@ class GameScene():
         displacement = self.player.get_displacement(time, self.platforms)
         self.player.update(self.platforms)
         self.platforms.update(displacement, self.player)
-        if self.player.jump_time < FALL_TIME_OVER and self.platforms.sprites()[0].y < self.origen_point_y:
+        if self.player.velocity < FALL_VELOCITY_OVER and self.platforms.sprites()[0].y < self.origen_point_y:
             for platform in self.platforms:
                 platform.restart()
 
