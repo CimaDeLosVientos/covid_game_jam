@@ -96,11 +96,19 @@ class Player(sprite.Sprite):
             if self.state != "right":
                 self.current_frame = FRAME_PER_SPRITE
                 self.state = "right"
+        elif keys[K_w] or keys[K_UP]:
+            if self.state != "up":
+                self.current_frame = FRAME_PER_SPRITE
+                self.state = "up"
+        elif keys[K_s] or keys[K_DOWN]:
+            if self.state != "down":
+                self.current_frame = FRAME_PER_SPRITE
+                self.state = "down"
         else:
             self.state = "idle"
-        if keys[K_UP] and not self.on_air:
-            self.jump_time = JUMP_DURATION
-            self.on_air = True
+        #if keys[K_UP] and not self.on_air:
+        #    self.jump_time = JUMP_DURATION
+        #    self.on_air = True
             
 
 
@@ -125,31 +133,46 @@ class Player(sprite.Sprite):
         #self.rect = self.image.get_rect()
         #self.rect.center = (self.x, self.y)
 
+#    def get_displacement(self, time, platforms):
+#        # e = 1/2 * a * t² + Vo * t + Eo
+#        x = 0
+#        y = 0
+#        if self.state == "left" and not self.in_touch_on_left(platforms):
+#            x += time * HORIZONTAL_VELOCITY
+#        if self.state == "right"  and not self.in_touch_on_right(platforms):
+#            x -= time * HORIZONTAL_VELOCITY
+#        if self.jump_time > 0:
+#            y += JUMP_POWER
+#            self.jump_time -= 1
+#        else:
+#            if self.on_air:
+#                y -= JUMP_POWER
+#                self.jump_time -= 1
+#
+#        #if self.jump_time <= 0:
+#        #    self.state = "idle"
+#
+#
+#        #if self.jump_velocity > 0:
+#        #    y += (0.5 * GRAVITY * time * time) + self.jump_velocity * time
+#        #    self.jump_velocity += GRAVITY * time
+#        #else:
+#        #    self.jump_velocity = 0
+#        return (x, y)
+
     def get_displacement(self, time, platforms):
         # e = 1/2 * a * t² + Vo * t + Eo
         x = 0
         y = 0
-        if self.state == "left" and not self.in_touch_on_left(platforms):
+        if self.state == "left":
             x += time * HORIZONTAL_VELOCITY
-        if self.state == "right"  and not self.in_touch_on_right(platforms):
+        if self.state == "right":
             x -= time * HORIZONTAL_VELOCITY
-        if self.jump_time > 0:
-            y += JUMP_POWER
-            self.jump_time -= 1
-        else:
-            if self.on_air:
-                y -= JUMP_POWER
-                self.jump_time -= 1
-
-        #if self.jump_time <= 0:
-        #    self.state = "idle"
-
-
-        #if self.jump_velocity > 0:
-        #    y += (0.5 * GRAVITY * time * time) + self.jump_velocity * time
-        #    self.jump_velocity += GRAVITY * time
-        #else:
-        #    self.jump_velocity = 0
+        if self.state == "up":
+            y += time * HORIZONTAL_VELOCITY
+        if self.state == "down":
+            y -= time * HORIZONTAL_VELOCITY
+        
         return (x, y)
 
 
