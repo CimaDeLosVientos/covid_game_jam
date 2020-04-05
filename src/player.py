@@ -83,10 +83,10 @@ class Player(sprite.Sprite):
         sheet = {}
         #sprite_sheet_dead_right = load_image("assets/images/sprites/floppy_dead_right.png")
         sprite_sheet_go_right = load_image("assets/images/sprites/floppy_go_right.png")
-        #sprite_sheet_jump_right = load_image("assets/images/sprites/floppy_jump_right.png")
+        sprite_sheet_jump_right = load_image("assets/images/sprites/floppy_jump_right.png")
         #sprite_sheet_dead_left = load_image("assets/images/sprites/floppy_dead_left.png")
         sprite_sheet_go_left = load_image("assets/images/sprites/floppy_go_left.png")
-        #sprite_sheet_jump_left = load_image("assets/images/sprites/floppy_jump_left.png")
+        sprite_sheet_jump_left = load_image("assets/images/sprites/floppy_jump_left.png")
         sheet["dead_right"] = []
         sheet["go_right"] = []
         sheet["jump_right"] = []
@@ -98,9 +98,9 @@ class Player(sprite.Sprite):
             sheet["go_right"].append(sprite_sheet_go_right.subsurface((i*80, 0*64, 80, 100)))
             #sheet["dead_left"].append(sprite_sheet_dead_left.subsurface((i*width, 0*64, width, height-1)))
             sheet["go_left"].append(sprite_sheet_go_left.subsurface((i*80, 0*64, 80, 100)))
-        #for i in range(9):
-        #    sheet["jump_right"].append(sprite_sheet_jump_right.subsurface((i*width, 0*64, width, height)))
-        #    sheet["jump_left"].append(sprite_sheet_jump_left.subsurface((i*width, 0*64, width, height)))
+        for i in range(9):
+            sheet["jump_right"].append(sprite_sheet_jump_right.subsurface((i*82, 0*64, 82, 100)))
+            sheet["jump_left"].append(sprite_sheet_jump_left.subsurface((i*82, 0*64, 82, 100)))
 
         return sheet
         
@@ -151,16 +151,16 @@ class Player(sprite.Sprite):
         #         self.dead = False
         #     return frame
 
-        # if self.on_air:
-        #     if self.orientation == "right":
-        #         frame = self.sprites["jump_right"][self.current_sprite % 9]
-        #     else:
-        #         frame = self.sprites["jump_left"][self.current_sprite % 9]
-        # else:
-        if self.orientation == "right":
-            frame = self.sprites["go_right"][self.current_sprite % 4]
+        if self.on_air:
+            if self.orientation == "right":
+                frame = self.sprites["jump_right"][self.current_sprite % 9]
+            else:
+                frame = self.sprites["jump_left"][self.current_sprite % 9]
         else:
-            frame = self.sprites["go_left"][self.current_sprite % 4]
+            if self.orientation == "right":
+                frame = self.sprites["go_right"][self.current_sprite % 4]
+            else:
+                frame = self.sprites["go_left"][self.current_sprite % 4]
 
         self.current_frame += 1
         if self.current_frame == FRAME_PER_SPRITE:

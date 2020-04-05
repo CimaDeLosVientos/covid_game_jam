@@ -122,12 +122,10 @@ class GameScene():
 
     def play_music(self):
         for track in TRACK_LIST:
-            print(track)
             if self.cloud.x > track[0]:
                 correct_track = track[1]
                 break
         if correct_track != self.current_track:
-            print(correct_track)
             load_music("assets/music/{}".format(correct_track))
             self.current_track = correct_track
             pygame.mixer.music.play(-1)
@@ -180,7 +178,6 @@ class GameScene():
 
 
     def on_draw(self, screen):
-        print(self.cloud.x)
         # Clear the screen
         screen.fill((0, 0, 200))
 
