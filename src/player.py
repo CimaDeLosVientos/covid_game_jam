@@ -8,13 +8,16 @@ class Player(sprite.Sprite):
         sprite.Sprite.__init__(self)
         self.device = device
         self.sprites = self.load_sprites()
-        self.image = self.sprites["normal"]
+        self.image = self.sprites["go_right"][0]
         self.x = pos_x         #X inicial
         self.y = pos_y         #Y inicial   
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
         self.keyMap = {}
-        self.current_frame = -1
+        self.current_frame = 0
+        self.current_sprite = 0
+        self.dead = False
+        self.orientation = "right"
 
         self.velocity = 0
         self.on_air = False
@@ -37,12 +40,11 @@ class Player(sprite.Sprite):
                                         self.rect.width - MARGIN_COLLISION_RECT*2,
                                         MARGIN_COLLISION_RECT))
 
-        self.setPlayer(device)
         self.restart()
 
     def restart(self):
         self.state = "idle"
-        self.image = self.sprites["normal"]
+        self.image = self.sprites["go_right"][0]
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
@@ -75,36 +77,50 @@ class Player(sprite.Sprite):
         return False
 
 
-    def setPlayer(self, device):
-        return
-        if device == "keyboard":
-            self.keyMap["left"] = K_a
-            self.keyMap["right"] = K_d
-        #elif device == "pad":
-        #    self.keyMap["up"] = (0,1)
-        #    self.keyMap["down"] = (0,-1)
-        #    self.keyMap["left"] = (-1,0)
-        #    self.keyMap["right"] = (0,1)
-        #    self.keyMap["weakAttack"] = 2       #Number of the button (X on Xbox controller)
-        #    self.keyMap["strongAttack"] = 3     #Number of the button (Y on Xbox controller)
-
     def load_sprites(self):
-        ficha = {
-            "normal" : load_image("assets/images/sprites/player.png"),
-        }
-        return ficha
+        width = 400
+        height = 550
+        sheet = {}
+        sprite_sheet_dead_right = load_image("assets/images/sprites/floppy_dead_right.png")
+        sprite_sheet_go_right = load_image("assets/images/sprites/floppy_go_right.png")
+        sprite_sheet_jump_right = load_image("assets/images/sprites/floppy_jump_right.png")
+        sprite_sheet_dead_left = load_image("assets/images/sprites/floppy_dead_left.png")
+        sprite_sheet_go_left = load_image("assets/images/sprites/floppy_go_left.png")
+        sprite_sheet_jump_left = load_image("assets/images/sprites/floppy_jump_left.png")
+        sheet["dead_right"] = []
+        sheet["go_right"] = []
+        sheet["jump_right"] = []
+        sheet["dead_left"] = []
+        sheet["go_left"] = []
+        sheet["jump_left"] = []
+        for i in range(4):
+            sheet["dead_right"].append(sprite_sheet_dead_right.subsurface((i*width, 0*64, width, height)))
+            sheet["go_right"].append(sprite_sheet_go_right.subsurface((i*width, 0*64, width, height)))
+            sheet["dead_left"].append(sprite_sheet_dead_left.subsurface((i*width, 0*64, width, height-1)))
+            sheet["go_left"].append(sprite_sheet_go_left.subsurface((i*width, 0*64, width, height-1)))
+        for i in range(9):
+            sheet["jump_right"].append(sprite_sheet_jump_right.subsurface((i*width, 0*64, width, height)))
+            sheet["jump_left"].append(sprite_sheet_jump_left.subsurface((i*width, 0*64, width, height)))
+
+        return sheet
         
 
 
     def action_keyboard(self, keys):
+        if self.dead:
+            return
         if keys[K_a] or keys[K_LEFT]:
             if self.state != "left":
                 self.current_frame = 0
+                self.current_sprite = 0
                 self.state = "left"
+                self.orientation = "left"
         elif keys[K_d] or keys[K_RIGHT]:
             if self.state != "right":
-                self.current_frame = FRAME_PER_SPRITE
+                self.current_frame = 0
+                self.current_sprite = 0
                 self.state = "right"
+                self.orientation = "right"
         #elif keys[K_w] or keys[K_UP]:
         #    if self.state != "up":
         #        self.current_frame = FRAME_PER_SPRITE
@@ -115,26 +131,43 @@ class Player(sprite.Sprite):
         #        self.state = "down"
         else:
             self.state = "idle"
-        if keys[K_UP] and not self.on_air:
+        if (keys[K_UP] or keys[K_SPACE]) and not self.on_air:
             self.on_air = True
             self.velocity = INITIAL_VELOCITY
-            
 
 
     def getFrame(self):
-        return self.sprites["normal"]
-        if self.current_frame == -1:
-            return self.sprites["normal"]
-        if self.state == "idle":
-            return self.sprites["front"]
+        frame = None
+        if self.dead:
+            if self.orientation == "right":
+                frame = self.sprites["dead_right"][self.current_sprite]
+            else:
+                frame = self.sprites["dead_left"][self.current_sprite]
+            self.current_frame += 1
+            if self.current_frame == FRAME_PER_SPRITE + 10:
+                self.current_sprite -= 1
+                self.current_frame = 0
+            if self.current_sprite == -1:
+                self.dead = False
+            return frame
+
+        if self.on_air:
+            if self.orientation == "right":
+                frame = self.sprites["jump_right"][self.current_sprite % 9]
+            else:
+                frame = self.sprites["jump_left"][self.current_sprite % 9]
+        else:
+            if self.orientation == "right":
+                frame = self.sprites["go_right"][self.current_sprite % 4]
+            else:
+                frame = self.sprites["go_left"][self.current_sprite % 4]
 
         self.current_frame += 1
-        if self.current_frame == FRAME_PER_SPRITE * 2 + 1:
+        if self.current_frame == FRAME_PER_SPRITE:
+            self.current_sprite += 1
             self.current_frame = 0
-        if self.current_frame <= FRAME_PER_SPRITE:
-            return self.sprites["left"]
-        else:
-            return self.sprites["right"]
+
+        return frame
 
     def update(self, platforms):
         self.on_floor(platforms)
@@ -150,7 +183,7 @@ class Player(sprite.Sprite):
             contact = self.in_touch_on_left(platforms)
             if not contact:
                 x += time * HORIZONTAL_VELOCITY
-            else: 
+            else:
                 x -= (contact - 1) # Hold contact
         if self.state == "right":
             contact = self.in_touch_on_right(platforms)
@@ -174,7 +207,7 @@ class Player(sprite.Sprite):
 
         contact = self.in_touch_on_top(platforms)
         if contact:
-            y += (contact - 1)
+            y -= (contact - 1)
             self.velocity = 0
             self.on_air = True
 

@@ -96,18 +96,21 @@ class GameScene():
         pl.append(Platform((pl[-1].x + 225, pl[-1].y - 150), "platform_2"))
         # Escena 15 (Final)
         pl.append(FloatPlatformHorizontal((pl[-1].x + 187, pl[-1].y + 0), 225, "platform_3"))
-        pl.append(FloatPlatformHorizontal((pl[-1].x + 224, pl[-1].y + 0), 225, "platform_3"))
-
+        #pl.append(FloatPlatformHorizontal((pl[-1].x + 224, pl[-1].y + 0), 225, "platform_3"))
+        self.cloud = Cloud((pl[-1].x + 224, pl[-1].y + 0))
 
         self.platforms.add(pl)
+        self.platforms.add(self.cloud)
 
+        self.end = False
+        self.end_time = 0
 
         self.origen_point_x = 250
         self.origen_point_y = 400
         self.die = False
 
         # Player
-        self.player = Player("keyboard", int(WIDTH / 2), 400)
+        self.player = Player("keyboard", int(WIDTH / 2), int(HEIGHT / 2))
 
     def load(self, data):
         pass
@@ -121,12 +124,38 @@ class GameScene():
 
 
     def on_update(self, time):
+        if sprite.collide_rect(self.cloud, self.player):
+            self.end = True
+        if self.end:
+            if self.end_time < FLY_TIME:
+                self.player.on_air = False
+                self.platforms.update((-1, 0))
+                self.cloud.update((1, 0))
+                self.player.update(self.platforms)
+                self.end_time += 1
+                return
+            elif self.end_time < STORM_TIME:
+                self.cloud.storm()
+                self.player.update(self.platforms)
+                self.end_time += 1
+                return
+            else:
+                self.cloud.storm()
+                self.player.on_air = True
+                self.end = False
+                self.end_time += 1
+                self.platforms.update((0, -2))
+                return
         displacement = self.player.get_displacement(time, self.platforms)
         self.player.update(self.platforms)
-        self.platforms.update(displacement, self.player)
+        self.platforms.update(displacement)
         if self.player.velocity < FALL_VELOCITY_OVER and self.platforms.sprites()[0].y < self.origen_point_y:
             for platform in self.platforms:
                 platform.restart()
+                self.player.dead = True
+                self.player.current_frame = 0
+                self.player.current_sprite = 3
+                self.end_time = 0
 
 
     def on_draw(self, screen):

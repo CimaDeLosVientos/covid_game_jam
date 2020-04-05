@@ -12,7 +12,7 @@ class Platform(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
-    def update(self, displacement, player):
+    def update(self, displacement):
         self.move(displacement)
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
@@ -75,3 +75,19 @@ class FloatPlatformVertical(FloatPlatform):
         if self.current == self.distance:
             self.orientation *= -1
             self.current = 0
+
+
+
+class Cloud(Platform):
+    def __init__(self, position):
+        super(Cloud, self).__init__(position, "cloud")
+        self.image_2 = load_image("assets/images/sprites/{}.png".format("cloud_2"))
+        self.image_3 = load_image("assets/images/sprites/{}.png".format("cloud_3"))
+        self.current_image = 0
+        # Sonido
+
+    def storm(self):
+        self.image = self.image_2 if self.current_image < STORM_INTERVAL else self.image_3
+        self.current_image = (self.current_image+1) % (STORM_INTERVAL * 2)
+        #hacer sonido 
+
