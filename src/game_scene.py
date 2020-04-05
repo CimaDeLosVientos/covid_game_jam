@@ -18,7 +18,7 @@ class GameScene():
         
 
         pl = []
-        pl.append(Platform((375, 945), "sea"))
+        pl.append(Platform((525, 945), "sea"))
         pl.append(Platform((pl[-1].x + 600, pl[-1].y - 25), "beach"))
         #Escena 2 (Playa = beach)
         pl.append(Platform((pl[-1].x + 300, pl[-1].y - 225), "platform_2_beach"))
@@ -188,21 +188,21 @@ class GameScene():
 
         screen.blit(self.player.image, self.player.rect)
 
-        caca = pygame.Surface((self.player.collision_rect_left.width, self.player.collision_rect_left.height))
-        caca.fill((255,0,0))
-        screen.blit(caca, self.player.collision_rect_left)
+        # caca = pygame.Surface((self.player.collision_rect_left.width, self.player.collision_rect_left.height))
+        # caca.fill((255,0,0))
+        # screen.blit(caca, self.player.collision_rect_left)
 
-        caca = pygame.Surface((self.player.collision_rect_right.width, self.player.collision_rect_right.height))
-        caca.fill((255,255,0))
-        screen.blit(caca, self.player.collision_rect_right) 
+        # caca = pygame.Surface((self.player.collision_rect_right.width, self.player.collision_rect_right.height))
+        # caca.fill((255,255,0))
+        # screen.blit(caca, self.player.collision_rect_right) 
 
-        caca = pygame.Surface((self.player.collision_rect_down.width, self.player.collision_rect_down.height))
-        caca.fill((255,0,255))
-        screen.blit(caca, self.player.collision_rect_down)
+        # caca = pygame.Surface((self.player.collision_rect_down.width, self.player.collision_rect_down.height))
+        # caca.fill((255,0,255))
+        # screen.blit(caca, self.player.collision_rect_down)
 
-        caca = pygame.Surface((self.player.collision_rect_top.width, self.player.collision_rect_top.height))
-        caca.fill((0,255,255))
-        screen.blit(caca, self.player.collision_rect_top)
+        # caca = pygame.Surface((self.player.collision_rect_top.width, self.player.collision_rect_top.height))
+        # caca.fill((0,255,255))
+        # screen.blit(caca, self.player.collision_rect_top)
 
 
         for platform in self.platforms:

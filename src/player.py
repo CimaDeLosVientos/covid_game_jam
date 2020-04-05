@@ -81,12 +81,12 @@ class Player(sprite.Sprite):
         width = 400
         height = 550
         sheet = {}
-        sprite_sheet_dead_right = load_image("assets/images/sprites/floppy_dead_right.png")
+        #sprite_sheet_dead_right = load_image("assets/images/sprites/floppy_dead_right.png")
         sprite_sheet_go_right = load_image("assets/images/sprites/floppy_go_right.png")
-        sprite_sheet_jump_right = load_image("assets/images/sprites/floppy_jump_right.png")
-        sprite_sheet_dead_left = load_image("assets/images/sprites/floppy_dead_left.png")
+        #sprite_sheet_jump_right = load_image("assets/images/sprites/floppy_jump_right.png")
+        #sprite_sheet_dead_left = load_image("assets/images/sprites/floppy_dead_left.png")
         sprite_sheet_go_left = load_image("assets/images/sprites/floppy_go_left.png")
-        sprite_sheet_jump_left = load_image("assets/images/sprites/floppy_jump_left.png")
+        #sprite_sheet_jump_left = load_image("assets/images/sprites/floppy_jump_left.png")
         sheet["dead_right"] = []
         sheet["go_right"] = []
         sheet["jump_right"] = []
@@ -94,13 +94,13 @@ class Player(sprite.Sprite):
         sheet["go_left"] = []
         sheet["jump_left"] = []
         for i in range(4):
-            sheet["dead_right"].append(sprite_sheet_dead_right.subsurface((i*width, 0*64, width, height)))
+            #sheet["dead_right"].append(sprite_sheet_dead_right.subsurface((i*width, 0*64, width, height)))
             sheet["go_right"].append(sprite_sheet_go_right.subsurface((i*80, 0*64, 80, 100)))
-            sheet["dead_left"].append(sprite_sheet_dead_left.subsurface((i*width, 0*64, width, height-1)))
+            #sheet["dead_left"].append(sprite_sheet_dead_left.subsurface((i*width, 0*64, width, height-1)))
             sheet["go_left"].append(sprite_sheet_go_left.subsurface((i*80, 0*64, 80, 100)))
-        for i in range(9):
-            sheet["jump_right"].append(sprite_sheet_jump_right.subsurface((i*width, 0*64, width, height)))
-            sheet["jump_left"].append(sprite_sheet_jump_left.subsurface((i*width, 0*64, width, height)))
+        #for i in range(9):
+        #    sheet["jump_right"].append(sprite_sheet_jump_right.subsurface((i*width, 0*64, width, height)))
+        #    sheet["jump_left"].append(sprite_sheet_jump_left.subsurface((i*width, 0*64, width, height)))
 
         return sheet
         

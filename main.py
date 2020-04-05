@@ -24,7 +24,7 @@ class Director:
 
 
         # Screen name
-        pygame.display.set_caption("Ad Aeternum")
+        pygame.display.set_caption("Floppy: Ad Aeternum")
 
         # Icon
         icon = load_image("assets/images/icon.png")
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     scenes = {"init" : 1,}
     data = {}
     director = Director(scenes, data)
-    director.presentation_screen("assets/images/presentation_screen.png")
+    director.presentation_screen("assets/images/scenes/loading.png")
 
     data = {
     }
