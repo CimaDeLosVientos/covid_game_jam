@@ -88,10 +88,10 @@ class Cloud(Platform):
                                 self.rect.width,
                                 10))
         self.current_image = 0
-        # Sonido
+        self.sound = load_sound("assets/music/swuing__donner1.wav")
 
     def storm(self):
         self.image = self.image_2 if self.current_image < STORM_INTERVAL else self.image_3
         self.current_image = (self.current_image+1) % (STORM_INTERVAL * 2)
-        #hacer sonido 
+        self.sound.play()
 

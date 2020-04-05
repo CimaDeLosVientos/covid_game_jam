@@ -11,6 +11,7 @@ class GameScene():
 
         self.background = load_image("assets/images/scenes/background.png")
 
+        self.current_track = "None"
 
         # Platforms
         self.platforms = pygame.sprite.Group()
@@ -101,7 +102,7 @@ class GameScene():
         #pl.append(FloatPlatformHorizontal((pl[-1].x + 313, pl[-1].y + 0), 225, "platform_3"))
         #pl.append(FloatPlatformHorizontal((pl[-1].x + 224, pl[-1].y + 0), 225, "platform_3"))
         self.cloud = Cloud((pl[-1].x + 413, pl[-1].y + 50))
-        self.cloud = Cloud((-400, 1000))
+        #self.cloud = Cloud((-400, 1000))
 
         self.platforms.add(pl)
         self.platforms.add(self.cloud)
@@ -119,6 +120,19 @@ class GameScene():
     def load(self, data):
         pass
 
+    def play_music(self):
+        for track in TRACK_LIST:
+            print(track)
+            if self.cloud.x > track[0]:
+                correct_track = track[1]
+                break
+        if correct_track != self.current_track:
+            print(correct_track)
+            load_music("assets/music/{}".format(correct_track))
+            self.current_track = correct_track
+            pygame.mixer.music.play(-1)
+
+
 
     def on_event(self, time, event):
         keys = pygame.key.get_pressed()
@@ -128,6 +142,7 @@ class GameScene():
 
 
     def on_update(self, time):
+        self.play_music()
         if sprite.collide_rect(self.cloud, self.player):
             self.end = True
         if self.end:
@@ -165,6 +180,7 @@ class GameScene():
 
 
     def on_draw(self, screen):
+        print(self.cloud.x)
         # Clear the screen
         screen.fill((0, 0, 200))
 
