@@ -50,6 +50,18 @@ class FloatPlatformHorizontal(FloatPlatform):
             self.orientation *= -1
             self.current = 0
 
+class FloatPlatformHorizontalInverted(FloatPlatform): # Distance is negative
+    def __init__(self, position, distance, image):
+        super(FloatPlatformHorizontalInverted, self).__init__(position, distance, image)
+
+    def move(self, displacement):
+        super(FloatPlatformHorizontalInverted, self).move(displacement)
+        self.x += -1 * self.orientation
+        self.current -= 1
+        if self.current == self.distance:
+            self.orientation *= -1
+            self.current = 0
+
 
 class FloatPlatformVertical(FloatPlatform):
     def __init__(self, position, distance, image):
