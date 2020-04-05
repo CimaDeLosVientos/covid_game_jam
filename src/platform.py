@@ -26,3 +26,40 @@ class Platform(sprite.Sprite):
     def restart(self):
         self.x = self.initial_x
         self.y = self.initial_y + RESET_DISTANCE
+
+
+
+
+class FloatPlatform(Platform):
+    def __init__(self, position, distance, image):
+        super(FloatPlatform, self).__init__(position, image)
+        self.distance = distance
+        self.current = 0
+        self.orientation = 1
+
+
+class FloatPlatformHorizontal(FloatPlatform):
+    def __init__(self, position, distance, image):
+        super(FloatPlatformHorizontal, self).__init__(position, distance, image)
+
+    def move(self, displacement):
+        super(FloatPlatformHorizontal, self).move(displacement)
+        self.x += FLOAT_STEP * self.orientation
+        self.current += 1
+        if self.current == self.distance:
+            self.orientation *= -1
+            self.current = 0
+
+
+class FloatPlatformVertical(FloatPlatform):
+    def __init__(self, position, distance, image):
+        super(FloatPlatformVertical, self).__init__(position, distance, image)
+
+
+    def move(self, displacement):
+        super(FloatPlatformVertical, self).move(displacement)
+        self.y += FLOAT_STEP * self.orientation
+        self.current += 1
+        if self.current == self.distance:
+            self.orientation *= -1
+            self.current = 0
