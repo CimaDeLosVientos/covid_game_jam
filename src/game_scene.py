@@ -121,8 +121,25 @@ class GameScene():
         # Clear the screen
         screen.fill((0, 0, 200))
 
-        screen.blit(self.player.image, self.player.rect) 
-        
+        screen.blit(self.player.image, self.player.rect)
+
+        caca = pygame.Surface((self.player.collision_rect_left.width, self.player.collision_rect_left.height))
+        caca.fill((255,0,0))
+        screen.blit(caca, self.player.collision_rect_left)
+
+        caca = pygame.Surface((self.player.collision_rect_right.width, self.player.collision_rect_right.height))
+        caca.fill((255,255,0))
+        screen.blit(caca, self.player.collision_rect_right) 
+
+        caca = pygame.Surface((self.player.collision_rect_down.width, self.player.collision_rect_down.height))
+        caca.fill((255,0,255))
+        screen.blit(caca, self.player.collision_rect_down)
+
+        caca = pygame.Surface((self.player.collision_rect_top.width, self.player.collision_rect_top.height))
+        caca.fill((0,255,255))
+        screen.blit(caca, self.player.collision_rect_top)
+
+
         for platform in self.platforms:
             screen.blit(platform.image, platform.rect)
 
