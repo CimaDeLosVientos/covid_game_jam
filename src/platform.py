@@ -80,9 +80,13 @@ class FloatPlatformVertical(FloatPlatform):
 
 class Cloud(Platform):
     def __init__(self, position):
-        super(Cloud, self).__init__(position, "cloud")
-        self.image_2 = load_image("assets/images/sprites/{}.png".format("cloud_2"))
-        self.image_3 = load_image("assets/images/sprites/{}.png".format("cloud_3"))
+        super(Cloud, self).__init__(position, "final_cloud")
+        self.image_2 = load_image("assets/images/sprites/{}.png".format("final_cloud_2"))
+        self.image_3 = load_image("assets/images/sprites/{}.png".format("final_cloud_3"))
+        self.collision = Rect((self.rect.left,
+                                self.rect.top / 2,
+                                self.rect.width,
+                                10))
         self.current_image = 0
         # Sonido
 

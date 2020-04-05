@@ -95,9 +95,9 @@ class Player(sprite.Sprite):
         sheet["jump_left"] = []
         for i in range(4):
             sheet["dead_right"].append(sprite_sheet_dead_right.subsurface((i*width, 0*64, width, height)))
-            sheet["go_right"].append(sprite_sheet_go_right.subsurface((i*width, 0*64, width, height)))
+            sheet["go_right"].append(sprite_sheet_go_right.subsurface((i*80, 0*64, 80, 100)))
             sheet["dead_left"].append(sprite_sheet_dead_left.subsurface((i*width, 0*64, width, height-1)))
-            sheet["go_left"].append(sprite_sheet_go_left.subsurface((i*width, 0*64, width, height-1)))
+            sheet["go_left"].append(sprite_sheet_go_left.subsurface((i*80, 0*64, 80, 100)))
         for i in range(9):
             sheet["jump_right"].append(sprite_sheet_jump_right.subsurface((i*width, 0*64, width, height)))
             sheet["jump_left"].append(sprite_sheet_jump_left.subsurface((i*width, 0*64, width, height)))
@@ -107,8 +107,8 @@ class Player(sprite.Sprite):
 
 
     def action_keyboard(self, keys):
-        if self.dead:
-            return
+        #if self.dead:
+        #    return
         if keys[K_a] or keys[K_LEFT]:
             if self.state != "left":
                 self.current_frame = 0
@@ -137,30 +137,30 @@ class Player(sprite.Sprite):
 
 
     def getFrame(self):
-        frame = None
-        if self.dead:
-            if self.orientation == "right":
-                frame = self.sprites["dead_right"][self.current_sprite]
-            else:
-                frame = self.sprites["dead_left"][self.current_sprite]
-            self.current_frame += 1
-            if self.current_frame == FRAME_PER_SPRITE + 10:
-                self.current_sprite -= 1
-                self.current_frame = 0
-            if self.current_sprite == -1:
-                self.dead = False
-            return frame
+        # frame = None
+        # if self.dead:
+        #     if self.orientation == "right":
+        #         frame = self.sprites["dead_right"][self.current_sprite]
+        #     else:
+        #         frame = self.sprites["dead_left"][self.current_sprite]
+        #     self.current_frame += 1
+        #     if self.current_frame == FRAME_PER_SPRITE + 10:
+        #         self.current_sprite -= 1
+        #         self.current_frame = 0
+        #     if self.current_sprite == -1:
+        #         self.dead = False
+        #     return frame
 
-        if self.on_air:
-            if self.orientation == "right":
-                frame = self.sprites["jump_right"][self.current_sprite % 9]
-            else:
-                frame = self.sprites["jump_left"][self.current_sprite % 9]
+        # if self.on_air:
+        #     if self.orientation == "right":
+        #         frame = self.sprites["jump_right"][self.current_sprite % 9]
+        #     else:
+        #         frame = self.sprites["jump_left"][self.current_sprite % 9]
+        # else:
+        if self.orientation == "right":
+            frame = self.sprites["go_right"][self.current_sprite % 4]
         else:
-            if self.orientation == "right":
-                frame = self.sprites["go_right"][self.current_sprite % 4]
-            else:
-                frame = self.sprites["go_left"][self.current_sprite % 4]
+            frame = self.sprites["go_left"][self.current_sprite % 4]
 
         self.current_frame += 1
         if self.current_frame == FRAME_PER_SPRITE:
