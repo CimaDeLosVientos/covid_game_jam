@@ -83,22 +83,15 @@ class GameScene():
         self.platforms.add(pl)
 
 
-
-
-        #self.platforms.add(Platform((200, 500), "platform_1"))
-        #self.platforms.add(Platform((700, 500), "platform_2"))
-        #self.platforms.add(Platform((900, 500), "platform_3"))
-
         self.origen_point_x = 250
         self.origen_point_y = 400
         self.die = False
 
         # Player
-        self.player = Player("keyboard", int(WIDTH / 2), 520)
+        self.player = Player("keyboard", int(WIDTH / 2), 400)
 
     def load(self, data):
         pass
-
 
 
     def on_event(self, time, event):
