@@ -1,17 +1,17 @@
 # Display
-MASTER_VOLUMEN = 0.1
+MASTER_VOLUMEN = 1
 #WIDTH  = 1920
 #HEIGHT = 1080
 WIDTH  = 1280
 HEIGHT = 720
 
 
-HORIZONTAL_VELOCITY = 0.2
+HORIZONTAL_VELOCITY = 0.2 # default 0.2
 GRAVITY = - 0.6
-INITIAL_VELOCITY = 14
+INITIAL_VELOCITY = 14 # default 14
 MAX_VELOCITY = 40
 MARGIN_COLLISION_RECT = 18
-FRAME_PER_SPRITE = 7
+FRAME_PER_SPRITE = 6
 
 FALL_VELOCITY_OVER = -50
 RESET_DISTANCE = 700
@@ -24,18 +24,11 @@ STORM_INTERVAL = 5
 
 
 TRACK_LIST = (
-	(14620, "waves.mp3"),
-	(11720, "forest-bird-sounds.mp3"),
-	(9060, "night_forest.mp3"),
-	(6400, "scary-night-at-forest.wav"),
-	(3560, "wind-soundeffect.mp3"),
-	(-1000, "wind-whistling-sound-1.wav")
+	(14650, "waves.mp3"),
+	(12400, "forest.mp3"),
+	(9700, "night_forest.mp3"),
+	(7150, "scary_forest.wav"),
+	(5050, "wind.mp3"),
+	(300, "hard_wind.mp3"),
+    (-1000, "None")
 )
-	
-
-MUSIC_INTERVAL_1 = 3560
-MUSIC_INTERVAL_1 = 6400
-MUSIC_INTERVAL_1 = 9060
-MUSIC_INTERVAL_1 = 11720
-MUSIC_INTERVAL_1 = 14620
-MUSIC_INTERVAL_1 = 17820

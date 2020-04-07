@@ -1,4 +1,4 @@
-import pygame, os, random, time as tim
+import pygame, os, random, time
 from pygame.locals import *
 from src.helpers import *
 from src.platform import *
@@ -19,6 +19,7 @@ class Director:
 
     def __init__(self, scenes, data):
         # Display
+        self.fullscream = False
         self.screen = pygame.display.set_mode([WIDTH, HEIGHT])
         #self.screen = pygame.display.set_mode([WIDTH, HEIGHT], flags = pygame.FULLSCREEN)
 
@@ -58,6 +59,12 @@ class Director:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.quit()
+                    if event.key == pygame.K_p:
+                        if self.fullscream:
+                            self.screen = pygame.display.set_mode([WIDTH, HEIGHT])
+                        else:
+                            self.screen = pygame.display.set_mode([WIDTH, HEIGHT], flags = pygame.FULLSCREEN)
+                        self.fullscream = not self.fullscream
 
                 # detecta eventos
                 self.current_scene.on_event(time, event)
@@ -94,7 +101,7 @@ if __name__ == '__main__':
     data = {}
     director = Director(scenes, data)
     director.presentation_screen("assets/images/scenes/loading.png")
-
+    loading_time = time.clock()
     data = {
     }
     scenes = {
@@ -103,4 +110,6 @@ if __name__ == '__main__':
     
     director.data = data
     director.scenes = scenes
+    loading_time = time.clock() - loading_time
+    time.sleep(4 - loading_time)
     director.run()
