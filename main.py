@@ -101,7 +101,7 @@ if __name__ == '__main__':
     data = {}
     director = Director(scenes, data)
     director.presentation_screen("assets/images/scenes/loading.png")
-    loading_time = time.clock()
+    #loading_time = time.clock()
     data = {
     }
     scenes = {
@@ -110,6 +110,6 @@ if __name__ == '__main__':
     
     director.data = data
     director.scenes = scenes
-    loading_time = time.clock() - loading_time
-    time.sleep(4 - loading_time)
+    #loading_time = time.clock() - loading_time
+    #time.sleep(4 - loading_time)
     director.run()

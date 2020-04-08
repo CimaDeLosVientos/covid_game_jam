@@ -135,6 +135,7 @@ class GameScene():
         if correct_track != self.current_track:
             if correct_track == "None":
                 pygame.mixer.music.stop()
+                return
             load_music("assets/music/{}".format(correct_track))
             self.current_track = correct_track
             pygame.mixer.music.play(-1)
@@ -154,17 +155,17 @@ class GameScene():
             self.end = True
         if self.end:
             if self.end_time < FIX_TIME:
-                self.platforms.update((0, -3))
+                self.platforms.update(self.cloud.fix())
             if self.end_time < FLY_TIME:
                 self.player.on_air = False
                 self.platforms.update((-3, 0))
                 self.cloud.update((3, 0))
-                self.player.update(self.platforms)
+                self.player.update((-3, 0), self.platforms)
                 self.end_time += 1
                 return
             elif self.end_time < STORM_TIME:
                 self.cloud.storm()
-                self.player.update(self.platforms)
+                self.player.update((0,0),self.platforms)
                 self.end_time += 1
                 return
             else:
@@ -173,19 +174,22 @@ class GameScene():
                 self.end = False
                 self.end_time += 1
                 self.platforms.update((0, -3))
+                self.player.update((0, -3), self.platforms)
                 return
         displacement = self.player.get_displacement(time, self.platforms)
-        self.player.update(self.platforms)
+        self.player.update(displacement, self.platforms)
         self.platforms.update(displacement)
         self.clouds.update(displacement)
         if self.player.velocity < FALL_VELOCITY_OVER and self.platforms.sprites()[0].y < self.origen_point_y:
+            self.player.dead = True
+            self.player.state = "idle"
+            self.player.current_frame = 0
+            self.player.current_sprite = 0
+            self.player.relative_x = self.player.x
+            self.player.relative_y = self.player.y
+            self.end_time = 0
             for platform in self.platforms:
                 platform.restart()
-                self.player.dead = True
-                self.player.state = "idle"
-                self.player.current_frame = 0
-                self.player.current_sprite = 0
-                self.end_time = 0
             for cloud in self.clouds:
                 cloud.restart()
 

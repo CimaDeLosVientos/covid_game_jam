@@ -1,4 +1,5 @@
 from pygame import sprite, transform
+from math import ceil
 from pygame.locals import *
 from .helpers import *
 from .parameters import *
@@ -101,6 +102,7 @@ class Cloud(Platform):
     def __init__(self, position):
         super(Cloud, self).__init__(position, "final_cloud")
         self.thunder = True
+        self.image_1 = self.image
         self.image_2 = load_image("assets/images/sprites/{}.png".format("final_cloud_2"))
         self.image_3 = load_image("assets/images/sprites/{}.png".format("final_cloud_3"))
         self.collision = Rect((self.rect.left,
@@ -109,6 +111,9 @@ class Cloud(Platform):
                                 10))
         self.current_image = 0
         self.sound = load_sound("assets/music/thunder.wav")
+
+    def fix(self):
+        return (-2, -3)
 
     def storm(self):
         self.image = self.image_2 if self.current_image < STORM_INTERVAL else self.image_3
@@ -120,6 +125,7 @@ class Cloud(Platform):
     def restart(self):
         super(Cloud, self).restart()
         self.thunder = True
+        self.image = self.image_1
         self.current_image = 0
 
 

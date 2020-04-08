@@ -9,8 +9,8 @@ class Player(sprite.Sprite):
         self.device = device
         self.sprites = self.load_sprites()
         self.image = self.sprites["go_right"][0]
-        self.x = pos_x         #X inicial
-        self.y = pos_y         #Y inicial   
+        self.x = self.relative_x = pos_x         # Player always be in screen 's center, the real position is relative to platforms moves
+        self.y = self.relative_y = pos_y
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
         self.keyMap = {}
@@ -176,8 +176,10 @@ class Player(sprite.Sprite):
 
         return frame
 
-    def update(self, platforms):
+    def update(self, displacement, platforms):
         self.on_floor(platforms)
+        self.relative_x += displacement[0] # Don't tested
+        self.relative_y += displacement[1]
         self.image = self.getFrame()
 
 
