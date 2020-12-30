@@ -6,13 +6,14 @@ from .parameters import *
 import random
 
 class Platform(sprite.Sprite):
-    def __init__(self, position, image):
+    def __init__(self, position, image, area_displacement=None):
         sprite.Sprite.__init__(self)
         self.x = self.initial_x = position[0]
         self.y = self.initial_y = position[1]
         self.image = load_image("assets/images/sprites/{}.png".format(image))
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
+        self.area_displacement = area_displacement
 
     def update(self, displacement):
         self.move(displacement)
@@ -29,7 +30,9 @@ class Platform(sprite.Sprite):
         self.x = self.initial_x
         self.y = self.initial_y + RESET_DISTANCE
 
-
+    def relocate(self, wide, heigh):
+        self.x += -self.area_displacement[0] + random.randrange(0, wide)
+        self.y += -self.area_displacement[1] + random.randrange(0, heigh)
 
 
 class FloatPlatform(Platform):
@@ -130,6 +133,8 @@ class Cloud(Platform):
 
 
 
+
+
 # Decoration
 class CloudArea(Platform):
     def __init__(self, coordenate_left_top, coordenate_right_bottom, clouds_amounts):
@@ -138,23 +143,36 @@ class CloudArea(Platform):
         self.coordenate_right_bottom = coordenate_right_bottom
         self.clouds_amounts = clouds_amounts
         self.image = Surface((coordenate_right_bottom[0] - coordenate_left_top[0], coordenate_right_bottom[1] - coordenate_left_top[1]))
-        self.image.fill((random.randrange(255),random.randrange(255),random.randrange(255)))
-        self.image.set_alpha(128)                # alpha level
+        #self.image.fill((random.randrange(255),random.randrange(255),random.randrange(255)))
+        self.image.set_alpha(0)                # alpha level
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
+        self.wide = self.coordenate_right_bottom[0] - self.coordenate_left_top[0]
+        self.heigh = self.coordenate_right_bottom[1] - self.coordenate_left_top[1]
+        self.clouds = []
 
     def update(self, displacement):
         self.move(displacement)
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
 
+    def restart(self):
+        super(CloudArea, self).restart()
+        for cloud in self.clouds:
+            cloud.relocate(self.wide, self.heigh)
 
     def generate_clouds(self):
-        clouds = []
+        self.clouds = []
         for clouds_index in range(len(self.clouds_amounts)):
             for ii in range(self.clouds_amounts[clouds_index]):
                 x = random.randrange(self.coordenate_left_top[0], self.coordenate_right_bottom[0])
                 y = random.randrange(self.coordenate_left_top[1], self.coordenate_right_bottom[1])
-                clouds.append(Platform((x, y), "cloud_{}".format(clouds_index + 1)))
-                print(x,y)
-        return clouds
+                self.clouds.append(
+                    Platform(
+                        (x, y),"cloud_{}".format(clouds_index + 1), (
+                            x - self.coordenate_left_top[0],
+                            y - self.coordenate_left_top[1]
+                        )
+                    )
+                )
+        return self.clouds

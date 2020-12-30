@@ -18,11 +18,11 @@ class GameScene():
         pl = []
         self.clouds = pygame.sprite.Group()
         ca = []
-
+        self.ca = ca
         # generate_clouds(coordenate_left_top, coordenate_right_bottom, amount)
         #ca.append(CloudArea((200, 400), (1000, 700), (2, 3, 1)))
         
-
+        pl.append(Platform((-525, 945), "sea2_inv"))
         pl.append(Platform((525, 945), "sea"))
         pl.append(Platform((pl[-1].x + 600, pl[-1].y - 25), "beach"))
         #Nubes
@@ -52,10 +52,10 @@ class GameScene():
         pl.append(Platform((pl[-1].x + 299, pl[-1].y - 100), "platform_3_beach"))
         #Escena 3 (Playa)
         pl.append(Platform((pl[-1].x + 262, pl[-1].y - 100), "platform_2_beach"))
-        pl.append(Platform((pl[-1].x + 137, pl[-1].y + 100), "platform_1_beach"))
+        pl.append(Platform((pl[-1].x + 137, pl[-1].y + 100), "platform_2_beach"))
         #pl.append(Platform((pl[-1].x + 324, pl[-1].y + 100), "platform_3_beach"))
         pl.append(Platform((pl[-1].x + 274, pl[-1].y - 100), "platform_1_beach"))
-        pl.append(Platform((pl[-1].x + 332, pl[-1].y - 50), "platform_2_beach"))
+        pl.append(Platform((pl[-1].x + 282, pl[-1].y - 50), "platform_2_beach"))
         pl.append(Platform((pl[-1].x + 237, pl[-1].y - 50), "platform_3_beach"))
         #Escena 4 (Campo = grass)
         pl.append(Platform((pl[-1].x + 362, pl[-1].y - 50), "platform_2_grass"))
@@ -75,7 +75,7 @@ class GameScene():
         pl.append(Platform((pl[-1].x + 112, pl[-1].y - 50), "platform_1_forest"))
         pl.append(Platform((pl[-1].x + 137, pl[-1].y - 150), "platform_2_forest"))
         pl.append(Platform((pl[-1].x + 212, pl[-1].y - 150), "platform_1_forest"))
-        pl.append(Platform((pl[-1].x + 374, pl[-1].y - 0), "platform_3_forest"))
+        pl.append(Platform((pl[-1].x + 364, pl[-1].y - 0), "platform_3_forest"))
         #Escena 7 (Bosque)
         pl.append(Platform((pl[-1].x + 224, pl[-1].y + 50), "platform_1_forest"))
         pl.append(Platform((pl[-1].x + 237, pl[-1].y + 50), "platform_2_forest"))
@@ -212,6 +212,8 @@ class GameScene():
                 self.end_time = 0
             for cloud in self.clouds:
                 cloud.restart()
+            for area in self.ca:
+                area.restart()
 
 
     def on_draw(self, screen):

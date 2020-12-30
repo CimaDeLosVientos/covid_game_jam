@@ -18,6 +18,8 @@ class Player(sprite.Sprite):
         self.current_sprite = 0
         self.dead = False
         self.orientation = "right"
+        self.left_limit = 0
+        self.left_limit_margin = 900
 
         self.velocity = 0
         self.on_air = False
@@ -47,6 +49,7 @@ class Player(sprite.Sprite):
         self.image = self.sprites["go_right"][0]
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
+        self.left_limit = self.relative_x + self.left_limit_margin
 
 
     def on_floor(self, platforms):
@@ -67,6 +70,10 @@ class Player(sprite.Sprite):
         for platform in platforms:
             if self.collision_rect_left.colliderect(platform.rect):
                 return platform.rect.right - self.collision_rect_left.left
+            print(self.relative_x)
+            print(self.left_limit)
+            if self.relative_x > self.left_limit:
+                pass#return 1
         return False
 
 
@@ -140,7 +147,7 @@ class Player(sprite.Sprite):
     def getFrame(self):
         frame = None
         if self.dead and not self.on_air:
-            frame_dead = FRAME_PER_SPRITE / 3
+            frame_dead = FRAME_PER_SPRITE / 2
             if self.current_frame <= frame_dead or frame_dead * 14 < self.current_frame:
                 self.current_sprite = 0
             elif self.current_frame <= frame_dead * 2 or frame_dead * 12 < self.current_frame:
@@ -151,6 +158,7 @@ class Player(sprite.Sprite):
                 self.current_sprite = 3
             if self.current_frame == frame_dead * 16:
                 self.dead = False
+                self.left_limit = self.relative_x + self.left_limit_margin
             if self.orientation == "right":
                 frame = self.sprites["dead_right"][self.current_sprite]
             else:
