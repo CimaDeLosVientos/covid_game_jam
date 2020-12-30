@@ -17,16 +17,35 @@ class GameScene():
         self.platforms = pygame.sprite.Group()
         pl = []
         self.clouds = pygame.sprite.Group()
-        cs = []
+        ca = []
 
         # generate_clouds(coordenate_left_top, coordenate_right_bottom, amount)
-        cs += generate_clouds((200, 400), (1000, 700), (2, 3, 1))
+        #ca.append(CloudArea((200, 400), (1000, 700), (2, 3, 1)))
         
 
         pl.append(Platform((525, 945), "sea"))
         pl.append(Platform((pl[-1].x + 600, pl[-1].y - 25), "beach"))
+        #Nubes
+        ca.append(CloudArea((pl[-1].x + 725, pl[-1].y - 950), (pl[-1].x + 2200, pl[-1].y - 600), (4, 0, 0, 0)))
+        ca.append(CloudArea((ca[-1].x + 1475, ca[-1].y - 250), (ca[-1].x + 2500, ca[-1].y + 250), (4, 0, 0, 0)))
+        ca.append(CloudArea((ca[-1].x + 1025, ca[-1].y - 300), (ca[-1].x + 1500, ca[-1].y + 200), (2, 1, 0, 0)))
+        ca.append(CloudArea((ca[-1].x + 675, ca[-1].y - 300), (ca[-1].x + 1150, ca[-1].y + 300), (2, 1, 0, 0)))
+        ca.append(CloudArea((ca[-1].x + 475, ca[-1].y - 50), (ca[-1].x + 1200, ca[-1].y + 350), (1, 1, 0, 0)))
+        ca.append(CloudArea((ca[-1].x + 725, ca[-1].y + 0), (ca[-1].x + 1450, ca[-1].y + 850), (1, 1, 0, 0)))
+        ca.append(CloudArea((ca[-1].x + 725, ca[-1].y + 100), (ca[-1].x + 2150, ca[-1].y + 600), (1, 2, 1, 0)))
+        ca.append(CloudArea((ca[-1].x + 1425, ca[-1].y - 300), (ca[-1].x + 2125, ca[-1].y + 500), (1, 1, 1, 0)))
+        ca.append(CloudArea((ca[-1].x + 700, ca[-1].y - 300), (ca[-1].x + 3200, ca[-1].y + 300), (0, 4, 2, 0)))
+        ca.append(CloudArea((ca[-1].x + 2500, ca[-1].y - 350), (ca[-1].x + 4550, ca[-1].y + 350), (2, 5, 2, 0)))
+        ca.append(CloudArea((ca[-1].x + 2050, ca[-1].y + 300), (ca[-1].x + 2950, ca[-1].y + 800), (0, 2, 2, 0)))
+        ca.append(CloudArea((ca[-1].x + 900, ca[-1].y + 300), (ca[-1].x + 2700, ca[-1].y + 1100), (0, 2, 2, 2)))
+        ca.append(CloudArea((ca[-1].x + 1800, ca[-1].y - 300), (ca[-1].x + 2500, ca[-1].y + 1000), (0, 0, 2, 2)))
+        ca.append(CloudArea((ca[-1].x + 700, ca[-1].y - 400), (ca[-1].x + 1250, ca[-1].y + 700), (0, 0, 1, 2)))
+        ca.append(CloudArea((ca[-1].x + 650, ca[-1].y - 100), (ca[-1].x + 1450, ca[-1].y + 300), (0, 0, 2, 1)))
+
+
         #Escena 2 (Playa = beach)
         pl.append(Platform((pl[-1].x + 300, pl[-1].y - 225), "platform_2_beach"))
+        
         pl.append(Platform((pl[-1].x + 187, pl[-1].y - 50), "platform_3_beach"))
         pl.append(Platform((pl[-1].x + 262, pl[-1].y - 100), "platform_2_beach"))
         pl.append(Platform((pl[-1].x + 337, pl[-1].y - 0), "platform_3_beach"))
@@ -107,12 +126,14 @@ class GameScene():
         # Escena 15 (Final)
         #pl.append(FloatPlatformHorizontal((pl[-1].x + 313, pl[-1].y + 0), 225, "platform_3"))
         #pl.append(FloatPlatformHorizontal((pl[-1].x + 224, pl[-1].y + 0), 225, "platform_3"))
-        self.cloud = Cloud((pl[-1].x + 475, pl[-1].y + 200))
+        self.cloud = Cloud((pl[-1].x + 375, pl[-1].y + 200))
 
         pl.append(self.cloud)
         self.platforms.add(pl)
 
-        self.clouds.add(cs)
+        self.clouds.add(ca)
+        for area in ca:
+            self.clouds.add(area.generate_clouds())
 
         self.end = False
         self.end_time = 0
@@ -135,7 +156,6 @@ class GameScene():
         if correct_track != self.current_track:
             if correct_track == "None":
                 pygame.mixer.music.stop()
-                return
             load_music("assets/music/{}".format(correct_track))
             self.current_track = correct_track
             pygame.mixer.music.play(-1)
@@ -155,17 +175,19 @@ class GameScene():
             self.end = True
         if self.end:
             if self.end_time < FIX_TIME:
-                self.platforms.update(self.cloud.fix())
+                self.platforms.update((0, -3))
+                self.clouds.update((0, -3))
             if self.end_time < FLY_TIME:
                 self.player.on_air = False
                 self.platforms.update((-3, 0))
+                self.clouds.update((-3, 0))
                 self.cloud.update((3, 0))
                 self.player.update((-3, 0), self.platforms)
                 self.end_time += 1
                 return
             elif self.end_time < STORM_TIME:
                 self.cloud.storm()
-                self.player.update((0,0),self.platforms)
+                self.player.update(self.platforms)
                 self.end_time += 1
                 return
             else:
@@ -174,22 +196,20 @@ class GameScene():
                 self.end = False
                 self.end_time += 1
                 self.platforms.update((0, -3))
-                self.player.update((0, -3), self.platforms)
+                self.clouds.update((0, -3))
                 return
         displacement = self.player.get_displacement(time, self.platforms)
         self.player.update(displacement, self.platforms)
         self.platforms.update(displacement)
         self.clouds.update(displacement)
         if self.player.velocity < FALL_VELOCITY_OVER and self.platforms.sprites()[0].y < self.origen_point_y:
-            self.player.dead = True
-            self.player.state = "idle"
-            self.player.current_frame = 0
-            self.player.current_sprite = 0
-            self.player.relative_x = self.player.x
-            self.player.relative_y = self.player.y
-            self.end_time = 0
             for platform in self.platforms:
                 platform.restart()
+                self.player.dead = True
+                self.player.state = "idle"
+                self.player.current_frame = 0
+                self.player.current_sprite = 0
+                self.end_time = 0
             for cloud in self.clouds:
                 cloud.restart()
 
@@ -225,6 +245,7 @@ class GameScene():
 
         for cloud in self.clouds:
             screen.blit(cloud.image, cloud.rect)
+
 
 
 

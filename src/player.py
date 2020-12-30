@@ -122,14 +122,14 @@ class Player(sprite.Sprite):
                 if not self.on_air:
                     self.current_frame = 0
                     self.current_sprite = 0
-        #elif keys[K_w] or keys[K_UP]:
-        #    if self.state != "up":
-        #        self.current_frame = FRAME_PER_SPRITE
-        #        self.state = "up"
-        #elif keys[K_s] or keys[K_DOWN]:
-        #    if self.state != "down":
-        #        self.current_frame = FRAME_PER_SPRITE
-        #        self.state = "down"
+        elif GOD_MODE and (keys[K_w] or keys[K_UP]):
+            if self.state != "up":
+                self.current_frame = FRAME_PER_SPRITE
+                self.state = "up"
+        elif GOD_MODE and (keys[K_s] or keys[K_DOWN]):
+            if self.state != "down":
+                self.current_frame = FRAME_PER_SPRITE
+                self.state = "down"
         else:
             self.state = "idle"
         if (keys[K_UP] or keys[K_SPACE]) and not self.on_air:
@@ -187,6 +187,19 @@ class Player(sprite.Sprite):
         # e = 1/2 * a * t² + Vo * t + Eo; t = 1
         x = 0
         y = 0
+        if GOD_MODE:
+            x = 0
+            y = 0
+            if self.state == "left":
+               x += time * HORIZONTAL_VELOCITY
+            if self.state == "right":
+               x -= time * HORIZONTAL_VELOCITY
+            if self.state == "up":
+               y += time * HORIZONTAL_VELOCITY
+            if self.state == "down":
+               y -= time * HORIZONTAL_VELOCITY
+            
+            return (x, y)
         if self.state == "left":
             contact = self.in_touch_on_left(platforms)
             if not contact:
@@ -223,17 +236,3 @@ class Player(sprite.Sprite):
             self.on_air = True
 
         return (x, y)
-
-# Free controls
-        #x = 0
-        #y = 0
-        #if self.state == "left":
-        #    x += time * HORIZONTAL_VELOCITY
-        #if self.state == "right":
-        #    x -= time * HORIZONTAL_VELOCITY
-        #if self.state == "up":
-        #    y += time * HORIZONTAL_VELOCITY
-        #if self.state == "down":
-        #    y -= time * HORIZONTAL_VELOCITY
-        #
-        #return (x, y)

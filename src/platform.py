@@ -1,5 +1,5 @@
-from pygame import sprite, transform
 from math import ceil
+from pygame import sprite, transform, Surface, Rect
 from pygame.locals import *
 from .helpers import *
 from .parameters import *
@@ -131,12 +131,30 @@ class Cloud(Platform):
 
 
 # Decoration
-def generate_clouds(coordenate_left_top, coordenate_right_bottom, clouds_amounts):
-    clouds = []
-    for clouds_index in range(len(clouds_amounts)):
-        for ii in range(clouds_amounts[clouds_index]):
-            x = random.randrange(coordenate_left_top[0], coordenate_right_bottom[0])
-            y = random.randrange(coordenate_left_top[1], coordenate_right_bottom[1])
-            clouds.append(Platform((x, y), "cloud_{}".format(clouds_index + 1)))
-            print(x,y)
-    return clouds
+class CloudArea(Platform):
+    def __init__(self, coordenate_left_top, coordenate_right_bottom, clouds_amounts):
+        super(CloudArea, self).__init__(coordenate_left_top, "final_cloud")
+        self.coordenate_left_top = coordenate_left_top
+        self.coordenate_right_bottom = coordenate_right_bottom
+        self.clouds_amounts = clouds_amounts
+        self.image = Surface((coordenate_right_bottom[0] - coordenate_left_top[0], coordenate_right_bottom[1] - coordenate_left_top[1]))
+        self.image.fill((random.randrange(255),random.randrange(255),random.randrange(255)))
+        self.image.set_alpha(128)                # alpha level
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.x, self.y)
+
+    def update(self, displacement):
+        self.move(displacement)
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.x, self.y)
+
+
+    def generate_clouds(self):
+        clouds = []
+        for clouds_index in range(len(self.clouds_amounts)):
+            for ii in range(self.clouds_amounts[clouds_index]):
+                x = random.randrange(self.coordenate_left_top[0], self.coordenate_right_bottom[0])
+                y = random.randrange(self.coordenate_left_top[1], self.coordenate_right_bottom[1])
+                clouds.append(Platform((x, y), "cloud_{}".format(clouds_index + 1)))
+                print(x,y)
+        return clouds
