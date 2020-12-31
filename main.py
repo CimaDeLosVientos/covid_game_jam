@@ -111,5 +111,5 @@ if __name__ == '__main__':
     director.data = data
     director.scenes = scenes
     #loading_time = time.clock() - loading_time
-    #time.sleep(4 - loading_time)
+    time.sleep(3)
     director.run()

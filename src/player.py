@@ -2,6 +2,7 @@ from pygame import sprite, transform, Rect
 from pygame.locals import *
 from .helpers import *
 from .parameters import *
+from .platform import FloatPlatformHorizontal, FloatPlatformHorizontalInverted
 
 class Player(sprite.Sprite):
     def __init__(self, device, pos_x, pos_y):
@@ -70,10 +71,8 @@ class Player(sprite.Sprite):
         for platform in platforms:
             if self.collision_rect_left.colliderect(platform.rect):
                 return platform.rect.right - self.collision_rect_left.left
-            print(self.relative_x)
-            print(self.left_limit)
             if self.relative_x > self.left_limit:
-                pass#return 1
+                return 1
         return False
 
 
@@ -83,6 +82,13 @@ class Player(sprite.Sprite):
                 return platform.rect.bottom - self.collision_rect_top.top
         return False
 
+    def on_float_horizontal(self, platforms):
+        for platform in platforms:
+            if isinstance(platform, FloatPlatformHorizontal) and self.collision_rect_down.colliderect(platform.rect):
+                return -2 * platform.orientation
+            if isinstance(platform, FloatPlatformHorizontalInverted) and self.collision_rect_down.colliderect(platform.rect):
+                return +2 * platform.orientation
+        return 0
 
     def load_sprites(self):
         width = 80
@@ -150,13 +156,13 @@ class Player(sprite.Sprite):
             frame_dead = FRAME_PER_SPRITE / 2
             if self.current_frame <= frame_dead or frame_dead * 14 < self.current_frame:
                 self.current_sprite = 0
-            elif self.current_frame <= frame_dead * 2 or frame_dead * 12 < self.current_frame:
+            elif self.current_frame <= frame_dead * 2 or frame_dead * 10 < self.current_frame:
                 self.current_sprite = 1
-            elif self.current_frame <= frame_dead * 3 or frame_dead * 10 < self.current_frame:
+            elif self.current_frame <= frame_dead * 3 or frame_dead * 9 < self.current_frame:
                 self.current_sprite = 2
             elif self.current_frame <= frame_dead * 4 or frame_dead * 8 < self.current_frame:
                 self.current_sprite = 3
-            if self.current_frame == frame_dead * 16:
+            if self.current_frame == frame_dead * 11:
                 self.dead = False
                 self.left_limit = self.relative_x + self.left_limit_margin
             if self.orientation == "right":
@@ -227,6 +233,7 @@ class Player(sprite.Sprite):
             contact = self.on_floor(platforms)
             if contact:
                 y += (contact - 1)
+                x += self.on_float_horizontal(platforms)
                 if self.on_air:
                     self.on_air = False
                     self.velocity = 0

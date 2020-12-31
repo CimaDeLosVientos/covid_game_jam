@@ -6,7 +6,7 @@ WIDTH  = 1280
 HEIGHT = 720
 
 GOD_MODE = False
-HORIZONTAL_VELOCITY = 0.25 if not GOD_MODE else 1  # default 0.25
+HORIZONTAL_VELOCITY = 0.23 if not GOD_MODE else 1  # default 0.25
 GRAVITY = - 0.6
 INITIAL_VELOCITY = 14 # default 14
 MAX_VELOCITY = 40

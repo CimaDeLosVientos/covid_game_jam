@@ -100,7 +100,7 @@ class GameScene():
         pl.append(Platform((pl[-1].x + 237, pl[-1].y - 50), "platform_3_dirt"))
         #Escena 10 (Montaña = stone)
         pl.append(Platform((pl[-1].x + 374, pl[-1].y + 50), "platform_1_stone"))
-        pl.append(Platform((pl[-1].x + 112, pl[-1].y - 150), "platform_3_stone"))
+        pl.append(Platform((pl[-1].x + 162, pl[-1].y - 150), "platform_3_stone"))
         pl.append(Platform((pl[-1].x + 349, pl[-1].y - 0), "platform_3_stone"))
         #Escena 11 (Montaña)
         pl.append(FloatPlatformVertical((pl[-1].x + 312, pl[-1].y - 150), 300, "platform_2_stone"))
